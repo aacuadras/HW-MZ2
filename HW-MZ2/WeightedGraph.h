@@ -60,8 +60,10 @@ private:
 
 	//Helper method to add the neighbors
 	//Checks if the neighbors are already in the list and if they aren't, the new neighbor is added
+	//Since this is adding a normal neighbor without portals, the cost is 1
 	void addNeighbor(string index, Vertex*& x, Vertex *&y)
 	{
+		pair<Vertex*, int> newN;
 		bool foundx = false;
 		bool foundy = false;
 		try {
@@ -74,9 +76,17 @@ private:
 					foundy = true;
 
 			if (!foundx)
-				x->neighs.push_back(y);
+			{
+				newN.first = y;
+				newN.second = 1;
+				x->neighs.push_back(newN);
+			}
 			if (!foundy)
-				y->neighs.push_back(x);
+			{
+				newN.first = x;
+				newN.second = 1;
+				y->neighs.push_back(newN);
+			}
 		}
 		catch (out_of_range oor)
 		{
@@ -86,6 +96,7 @@ private:
 
 	//Checks the shortest path to the end of the maze
 	///Doesn't work for this HW
+	/*
 	void breadthFirstSearch(Vertex* s)
 	{
 		queue<Vertex*> Q;
@@ -99,7 +110,7 @@ private:
 			Q.pop();
 			for (int i = 0; i < x->neighs.size(); i++)
 			{
-				Vertex* y = x->neighs[i];
+				Vertex* y = x->neighs[i].first;
 				if (marked.find(y) == marked.end())
 				{
 					marked.insert(y);
@@ -109,6 +120,7 @@ private:
 			}
 		}
 	}
+	*/
 
 	bool find(vector<Vertex*> V, int r, int c)
 	{
@@ -130,9 +142,35 @@ public:
 		vertexIndex[reference] = baby;
 	}
 
+	void buildPortals(vector<int> coordinates, vector<int> cost)
+	{
+		//The cost has to be repeated in the vector, so search for the duplicate and their coordinates
+		//Searching for coordinates is as follows...
+		//Row: (cost * 2)
+		//Column: (cost * 2) + 1
+		//The special property is that the two vertices have to be neighbors and have the cost of the ASCII number they were passed
+		//and that is in the cost vector already
+		unordered_map<int, string> portals;
+		for (int i = 0; i < cost.size(); i++)
+		{
+			//This will return true when the first part of the portal is passed
+			//':' is the separator between the two coordinates of the portal
+			if (portals[cost[i]].empty())
+			{
+				portals[cost[i]] = to_string(coordinates[cost[i] * 2]) + "," + to_string(coordinates[(cost[i] * 2) + 1]);
+			}
+			else
+			{
+				portals[cost[i]] += ":" + to_string(coordinates[cost[i] * 2]) + "," + to_string(coordinates[(cost[i] * 2) + 1]);
+			}
+		}
+
+
+	}
+
 	//Checks the neighbors up, down, left and right and adds them to the neighs list in the vertex class
 	///Since neighs became a vector of pairs, we have to set the cost of every neighbor too, so we have to check
-	///if the neighbor is a portal and where it leads to
+	///if the neighbor is a portal and where it leads to. Check addNeighbor for more information.
 	void buildEdges()
 	{
 		Vertex* x;
@@ -184,6 +222,7 @@ public:
 	///with the shortest cost
 	string shortest_path(Vertex* s, Vertex* e, string maze)
 	{
+		/*
 		breadthFirstSearch(s);
 		Vertex* current = e;
 		string result;
@@ -224,6 +263,7 @@ public:
 			}
 		}
 		return result;
+		*/
 	}
 };
 
