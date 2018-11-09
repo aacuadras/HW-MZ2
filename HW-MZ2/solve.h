@@ -38,7 +38,7 @@ string solve(string maze)
 	{
 		if (maze[i] >= 48 && maze[i] <= 57)
 		{
-			m.addVertex(row, column, 1);
+			m.addVertex(row, column);
 			m.markPortal(row, column, (maze[i] - 48));
 			column++;
 			if (row == 0)
@@ -46,7 +46,7 @@ string solve(string maze)
 		}
 		else if (maze[i] == ' ')
 		{
-			m.addVertex(row, column, 1);
+			m.addVertex(row, column);
 			column++;
 			if (row == 0)
 				numCols++;
@@ -65,6 +65,9 @@ string solve(string maze)
 				numCols++;
 		}
 	}
+	//Once the graph is constructed, all the vertices have to be connected with cost 1, even if the vertex is a portal
+	//Now we call this function to connect the portals to one another with their corresponding weights
+	m.connectPortals();
 }
 
 #endif 

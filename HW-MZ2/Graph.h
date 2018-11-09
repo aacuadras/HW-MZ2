@@ -57,7 +57,7 @@ private:
 	//Helper method to add the neighbors
 	//Checks if the neighbors are already in the list and if they aren't, the new neighbor is added
 	//Since this is adding a normal neighbor without portals, the cost is 1
-	void addNeighbor(string index, Vertex*& x, Vertex *&y)
+	void addNeighbor(string index, Vertex*& x, Vertex *&y, int cost)
 	{
 		pair<Vertex*, int> newN;
 		bool foundx = false;
@@ -74,13 +74,13 @@ private:
 			if (!foundx)
 			{
 				newN.first = y;
-				newN.second = 1;
+				newN.second = cost;
 				x->neighs.push_back(newN);
 			}
 			if (!foundy)
 			{
 				newN.first = x;
-				newN.second = 1;
+				newN.second = cost;
 				y->neighs.push_back(newN);
 			}
 		}
@@ -89,6 +89,7 @@ private:
 			index = "";
 		}
 	}
+
 
 	//Checks if the cost is in the portalIndexes vector and returns a boolean value
 	bool checkCost(int cost)
@@ -102,7 +103,7 @@ private:
 public:
 
 	//Adds a normal vertex to the graph
-	void addVertex(int rows, int columns, int cost)
+	void addVertex(int rows, int columns)
 	{
 		string reference = to_string(rows) + "," + to_string(columns);
 		Vertex* baby = new Vertex(rows, columns);
@@ -122,15 +123,16 @@ public:
 			x = i.second;
 			//Check up
 			neighbor_check = to_string((x->row - 1)) + "," + to_string(x->col);
-			addNeighbor(neighbor_check, x, y);
+			addNeighbor(neighbor_check, x, y, 1);
 			//Check down
 			neighbor_check = to_string((x->row + 1)) + "," + to_string(x->col);
-			addNeighbor(neighbor_check, x, y);
+			addNeighbor(neighbor_check, x, y, 1);
 			//Check left
 			neighbor_check = to_string(x->row) + "," + to_string((x->col - 1));
-			addNeighbor(neighbor_check, x, y);
+			addNeighbor(neighbor_check, x, y, 1);
 			//Check right
 			neighbor_check = to_string(x->row) + "," + to_string((x->col + 1));
+			addNeighbor(neighbor_check, x, y, 1);
 		}
 		setStart();
 		setEnd();
@@ -173,5 +175,22 @@ public:
 
 		portals[cost].push_back(row);
 		portals[cost].push_back(column);
+	}
+
+	//Connects the portals as neighbors of one another
+	void connectPortals()
+	{
+		string first_portal;
+		string second_portal;
+		Vertex * y;
+		for (int i = 0; i < portalIndexes.size(); i++)
+		{
+			first_portal = "";
+			second_portal = "";
+			first_portal = first_portal + to_string(portals[portalIndexes[i]].at(0)) + "," + to_string(portals[portalIndexes[i]].at(1));
+			second_portal = second_portal + to_string(portals[portalIndexes[i]].at(2)) + "," + to_string(portals[portalIndexes[i]].at(3));
+			addNeighbor(second_portal, vertexIndex[first_portal], y, portalIndexes[i]);
+			addNeighbor(first_portal, vertexIndex[second_portal], y, portalIndexes[i]);
+		}
 	}
 };
