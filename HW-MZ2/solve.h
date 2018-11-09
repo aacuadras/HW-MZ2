@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include "minpriorityqueue.h" // Includes <vector>, <unordered_map>, <utility>
-#include"WeightedGraph.h"
+#include "Graph.h"
 
 using namespace std;
 
@@ -26,27 +26,27 @@ using namespace std;
 // Must run in O(s*log(s)) time.
 string solve(string maze)
 {
-	WeightedGraph m;
+	Graph m;
 	int row = 0;
 	int	column = 0;
 	int	numCols = 0;
-	vector<int> portals;
 	vector<int> cost;
+	vector<int> coordinates;
 
-	//Step 1: Construct the graph
+	//Step 1: Construct the graph and consider the portals as normal vertices 
 	for (int i = 0; i < maze.length(); i++)
 	{
 		if (maze[i] >= 48 && maze[i] <= 57)
 		{
-			//Enters the data of the portals to two vectors, the first one stores the location in two indexes 
-			//and the other one stores the costs 
-			portals.push_back(row);
-			portals.push_back(column);
-			portals.push_back(maze[i] - 48);
+			m.addVertex(row, column, 1);
+			m.markPortal(row, column, (maze[i] - 48));
+			column++;
+			if (row == 0)
+				numCols++;
 		}
 		else if (maze[i] == ' ')
 		{
-			m.addVertex(row, column);
+			m.addVertex(row, column, 1);
 			column++;
 			if (row == 0)
 				numCols++;
@@ -65,13 +65,6 @@ string solve(string maze)
 				numCols++;
 		}
 	}
-	m.setDimensions(row, numCols);
-	//This functions sends the two vectors and makes them as normal vertices, but with special properties
-	m.buildPortals(portals, cost);
-	m.buildEdges();
-	//m.testDisplay();
-
-	return m.shortest_path(m.getStart(), m.getEnd(), maze);
 }
 
 #endif 

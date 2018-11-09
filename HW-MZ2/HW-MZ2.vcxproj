@@ -22,10 +22,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="minpriorityqueue.h" />
     <ClInclude Include="solve.h" />
     <ClInclude Include="vertex.h" />
-    <ClInclude Include="WeightedGraph.h" />
+    <ClInclude Include="UnWeightedGraph.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

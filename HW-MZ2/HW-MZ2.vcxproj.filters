@@ -29,7 +29,10 @@
     <ClInclude Include="solve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WeightedGraph.h">
+    <ClInclude Include="Graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnWeightedGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
