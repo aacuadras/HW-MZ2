@@ -67,7 +67,12 @@ string solve(string maze)
 	}
 	//Once the graph is constructed, all the vertices have to be connected with cost 1, even if the vertex is a portal
 	//Now we call this function to connect the portals to one another with their corresponding weights
+	m.setDimensions(row, numCols);
+	m.buildEdges();
 	m.connectPortals();
+	m.testDisplay();
+
+	return 0;
 }
 
 #endif 

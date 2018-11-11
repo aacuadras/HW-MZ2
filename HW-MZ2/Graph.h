@@ -3,6 +3,7 @@
 #include<unordered_set>
 #include<queue>
 #include<string>
+#include<iostream>
 #include"vertex.h"
 using namespace std;
 
@@ -192,5 +193,34 @@ public:
 			addNeighbor(second_portal, vertexIndex[first_portal], y, portalIndexes[i]);
 			addNeighbor(first_portal, vertexIndex[second_portal], y, portalIndexes[i]);
 		}
+	}
+
+	//Method used to display the graph, debugging purposes
+	void testDisplay()
+	{
+		system("cls");
+		system("cls");
+		int counter = 1;
+		string current;
+
+		for (auto i : vertexIndex)
+		{
+			cout << counter << ": " << i.first << endl;
+			cout << "Neighbors: ";
+			for (int k = 0; k < i.second->neighs.size(); k++)
+			{
+				current = to_string(i.second->neighs[k].first->row) + "," + to_string(i.second->neighs[k].first->col);
+				cout << current << " (Cost: " << i.second->neighs[k].second << ") " << " :: ";
+			}
+			counter++;
+			cout << endl << endl;
+		}
+		cout << "NumRows: " << numRows << endl;
+		cout << "NumColumns: " << numColumns << endl;
+		current = to_string(start->row) + "," + to_string(start->col);
+		cout << "Start: " << current << endl;
+		current = to_string(end->row) + "," + to_string(end->col);
+		cout << "End: " << current << endl << endl;
+		system("pause");
 	}
 };
