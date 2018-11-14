@@ -5,6 +5,7 @@
 #include<string>
 #include<iostream>
 #include"vertex.h"
+#include "minpriorityqueue.h"
 using namespace std;
 
 class Graph
@@ -27,6 +28,11 @@ private:
 	int numRows;
 	//Dimensions of the maze: columns
 	int numColumns;
+	//Used to find the the Weight between Edges
+	unordered_map< pair<Vertex*, Vertex*>, int> EdgeWeight;
+	//Weight of a vertex
+	unordered_map<Vertex*, int> VertexWeight;
+
 	////////////////////////////////////////////
 
 	//Helper method to find the startpoint of the maze
@@ -99,6 +105,45 @@ private:
 			if (portalIndexes[i] == cost)
 				return true;
 		return false;
+	}
+
+	void Dijkstras(string s)
+	{
+		MinPriorityQueue<Vertex*> AwesomeSauce;
+
+		for (auto x : vertexIndex)
+		{
+			VertexWeight[vertexIndex[s]] = INFINITY;
+			AwesomeSauce.push(vertexIndex[s], INFINITY);
+		}
+
+		AwesomeSauce.decrease_key(getStart(), 0);
+		VertexWeight[getStart()] = 0;
+
+		while (AwesomeSauce.size() > 0)
+		{
+			Vertex *current;
+			current = new Vertex(AwesomeSauce.front);
+			AwesomeSauce.pop();
+
+			for(int y = 0; y < current->neighs.size(); y++)
+			{
+				relax(current, current->neighs[y].first);
+				
+			}
+		}
+	}
+	void relax(Vertex *a, Vertex *b)
+	{
+		pair<Vertex*, Vertex*> obj;
+		obj.first = a;
+		obj.second = b;
+
+		if (VertexWeight[a] + EdgeWeight[obj] < VertexWeight[b])
+		{
+			VertexWeight[b] = VertexWeight[a] + EdgeWeight[obj];
+			breadcrumbs[b] = a;
+		}
 	}
 
 public:
@@ -223,4 +268,6 @@ public:
 		cout << "End: " << current << endl << endl;
 		system("pause");
 	}
+
+
 };
